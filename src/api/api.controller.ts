@@ -1,14 +1,21 @@
 import { Controller, Delete, Get, Param, Post, Redirect } from '@nestjs/common';
 import { ApiService } from './api.service';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('api')
 export class ApiController {
 
-    constructor(private readonly apiService: ApiService){}
+    @MessagePattern('your_pattern')
+    handleMessagePrinted(data: any): string {
+        console.log(data.text);
+        return 'Message received!';
+    }
+
+    constructor(private readonly apiService: ApiService) { }
 
     @Get('users')
-    getUsers() {
-        console.log("Param");
+    async getUsers() {
+        return await this.apiService.getUsers();
     }
 
     @Get('user/:id')
